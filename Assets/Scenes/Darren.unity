@@ -566,6 +566,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DialogueSystem
       objectReference: {fileID: 0}
+    - target: {fileID: 4352244224455303985, guid: 78ad5d178094f4d6d89f550b5b1224d5, type: 3}
+      propertyPath: m_Name
+      value: LittleKid
+      objectReference: {fileID: 0}
     - target: {fileID: 5890629166437817109, guid: 78ad5d178094f4d6d89f550b5b1224d5, type: 3}
       propertyPath: m_LocalPosition.x
       value: 94.03513
