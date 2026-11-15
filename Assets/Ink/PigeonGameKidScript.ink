@@ -1,4 +1,53 @@
-->ParkKidStart
+VAR sunglassesQuest = false
+VAR sunglassesAquired = true
+
+{
+- not sunglassesQuest && not sunglassesAquired:
+    ->ParkKidStart
+- sunglassesQuest && not sunglassesAquired:
+    ->kid_waiting
+- else:
+    ->sunglasses_found
+}
+
+=== kid_waiting ===
+#speaker Little Kid
+Don't just stand around!
+
+#speaker Little Kid
+The sunglasses won't find themselves, you know!
+
+#speaker Little Kid
+Hmph.
+
+->END
+
+=== sunglasses_found ===
+#speaker Little Kid
+You found my sunglasses!
+
+#speaker Little Kid
+Hooray!
+
+#speaker Little Kid
+Thank you!
+
+#speaker Little Kid
+Here's my propeller hat.
+
+#speaker Little Kid
+Even though it's super duper uncool now, uh...
+
+#speaker Little Kid
+You have to take good care of it.
+
+#speaker Little Kid
+Okay, bye now.
+
+#speaker Little Kid
+I'm gonna go be super duper cool with the other kids.
+
+-> END
 
 === ParkKidStart ===
 #speaker Little Kid
@@ -72,5 +121,8 @@ You decide to not involve yourself.
 === leave2 ===
 #speaker You
 Well, I wish you luck!
+
+#speaker Little Kid
+Okay, I guess...
 
 ->END

@@ -1,9 +1,23 @@
 VAR hotdogQuest = false
 VAR hotdogAquired = false
 
-{not hotdogQuest and not hotdogAquired:
-->hotdog_start
+{
+- not hotdogQuest && not hotdogAquired:
+    ->hotdog_start
+- hotdogQuest && not hotdogAquired:
+    ->hotdog_waiting
+- else:
+    ->hotdog_found
 }
+
+=== hotdog_waiting ===
+#speaker Dan the Hot Dog Man
+Any luck?
+
+#speaker Dan the Hot Dog Man
+If it helps, it's probably somewhere on the north side of the park.
+
+->END
 
 === hotdog_found ===
 #speaker Dan the Hot Dog Man
