@@ -24,6 +24,7 @@ Hmph.
 
 === sunglasses_found ===
 #speaker Little Kid
+#expression kid_happy
 You found my sunglasses!
 
 #speaker Little Kid
@@ -33,6 +34,7 @@ Hooray!
 Thank you!
 
 #speaker Little Kid
+#expression kid_bald
 Here's my propeller hat.
 
 #speaker Little Kid
@@ -51,6 +53,7 @@ I'm gonna go be super duper cool with the other kids.
 
 === ParkKidStart ===
 #speaker Little Kid
+#expression kid_sad
 Sunglasses...
 
 #speaker Little Kid
@@ -92,6 +95,7 @@ He T-poses in front of you.
 I'll help you look for it.
 
 #speaker Little Kid
+#expression kid_happy
 Thanks! You can have my propeller hat in return.
 
 #speaker Little Kid
@@ -123,6 +127,7 @@ You decide to not involve yourself.
 Well, I wish you luck!
 
 #speaker Little Kid
+#expression kid_sad
 Okay, I guess...
 
 ->END
