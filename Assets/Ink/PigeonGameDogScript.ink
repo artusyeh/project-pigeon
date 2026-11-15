@@ -1,4 +1,67 @@
--> startDog
+VAR ballQuest = false
+VAR ballAquired = false
+
+{
+- not ballQuest && not ballAquired:
+    ->startDog
+- ballQuest && not ballAquired:
+    ->dogWait
+- else:
+    ->ballFound
+}
+
+=== dogWait ===
+#speaker Corgi
+How much longer... woof...
+
+#speaker Corgi
+I'm dying over here!
+
+#speaker You
+How come your owner doesn't play with you?
+
+#speaker Corgi
+She's naping in the grass.
+
+#speaker Corgi
+So, I have to take advantage of this freedom!
+
+#speaker You
+I see. I will let you know if I find anything.
+->END
+
+=== ballFound ===
+#speaker Corgi
+IS THAT A TENNIS BALL?!
+
+#speaker Corgi
+I LOVE TENNIS BALLS.
+
+#speaker Corgi
+WOOF, WOOF!
+
+#speaker You
+You nudge the ball at the corgi.
+
+#speaker Corgi
+YAYYYYYY!
+
+#speaker Corgi
+BALL, BALL, BALL, BALL!
+
+#speaker Narrator
+He runs after the ball which is rolling away.
+
+#speaker Narrator
+Then he turns around and yells:
+
+#speaker Corgi
+THANKS FOR THE HELP!
+
+#speaker Narrator
+He wags his tail the whole time, until he is out of view.
+
+->END
 
 === startDog ===
 #speaker Corgi

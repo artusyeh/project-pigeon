@@ -1,4 +1,56 @@
-->PoliceStart
+VAR badgeQuest = false
+VAR badgeAquired = false
+
+{
+- not badgeQuest && not badgeAquired:
+    ->PoliceStart
+- badgeQuest && not badgeAquired:
+    ->PoliceWait
+- else:
+    ->BadgeFound
+}
+
+=== BadgeFound ===
+#speaker Brian the NYPD Officer
+Nice job, pigeon!
+
+#speaker Brian the NYPD Officer
+Now I won't have to report my badge missing.
+
+#speaker Brian the NYPD Officer
+Here.
+
+#speaker Brian the NYPD Officer
+A sticker for your hard work.
+
+#speaker Narrator
+Brian gives you a sticker that reads "Outstanding Citizen."
+
+#speaker Narrator
+It barely sticks to your feathers.
+
+#speaker Brian the NYPD Officer
+Thanks again!
+
+#speaker Narrator
+By the time Brian left, the wind had already blown the sticker away.
+
+->END
+
+=== PoliceWait ===
+#speaker Brian the NYPD Officer
+Find anything, pal?
+
+#speaker You
+Not yet...
+
+#speaker Brian the NYPD Officer
+Don't worry.
+
+#speaker Brian the NYPD Officer
+Just let me know when you find it.
+
+->END
 
 === PoliceStart ===
 #speaker Brian the NYPD Officer
