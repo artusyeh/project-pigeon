@@ -1,5 +1,9 @@
 fileFormatVersion: 2
-guid: b5af88daa42b5b146adb329b32cb3b5b
+<<<<<<<< HEAD:Assets/Ink/PigeonGameKidScript.json.meta
+guid: 792187714a421498fba9ccdd1b9fc667
+========
+guid: 259d9229680cd034cba53200ba1c66b5
+>>>>>>>> origin/Sally:Assets/Ink/PigeonGameDogScript.json.meta
 TextScriptImporter:
   externalObjects: {}
   userData: 
