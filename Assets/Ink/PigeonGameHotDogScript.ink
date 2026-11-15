@@ -1,4 +1,52 @@
+VAR hotdogQuest = false
+VAR hotdogAquired = false
+
+{not hotdogQuest and not hotdogAquired:
 ->hotdog_start
+}
+
+=== hotdog_found ===
+#speaker Dan the Hot Dog Man
+You found my buns!
+
+#speaker Dan the Hot Dog Man
+Thanks man, seriously.
+
+#speaker Narrator
+. . .
+
+#speaker Dan the Hot Dog Man
+Here's the first grilled hot dog of the day, as promised.
+
+#speaker Dan the Hot Dog Man
+Enjoy!
+
++[Thank you!] ->thankYou
++[Why are you green?] ->whyGreen
+
+=== thankYou ===
+#speaker Dan the Hot Dog Man
+Of course!
+->END
+
+=== whyGreen ===
+#speaker You
+Why are you green?
+
+#speaker Dan the Hot Dog Man
+I like eating peas.
+
+#speaker Dan the Hot Dog Man
+That's why, haha
+
+#speaker You
+Well, thanks for the hot dog!
+
+#speaker Dan the Hot Dog Man
+Of course, man.
+
+->END
+
 === hotdog_start ===
 #speaker Dan the Hot Dog Man
 Aw, man.
