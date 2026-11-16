@@ -40,7 +40,7 @@ I LOVE TENNIS BALLS.
 #speaker Corgi
 WOOF, WOOF!
 
-#speaker You
+#speaker Twiggy
 You nudge the ball at the corgi.
 
 #speaker Corgi
