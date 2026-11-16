@@ -79,10 +79,11 @@ I'm bored.
 #speaker Corgi
 Woof, woof.
 
-+[I'll find you something fun.]->help
-+[Maybe you should take a nap]->leave
++[\[1\] I'll find you something fun.]->help
++[\[2\] Maybe you should take a nap]->leave
 
 === help ===
+~ ballQuest = false
 #speaker You
 I'll find you something fun.
 
