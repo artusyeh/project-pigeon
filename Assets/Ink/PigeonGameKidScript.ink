@@ -66,7 +66,7 @@ Oh no...
 +[Ignore] ->leave1
 
 === whatsWrong ===
-#speaker You
+#speaker Twiggy
 What's wrong?
 
 #speaker Little Kid
@@ -91,7 +91,7 @@ He T-poses in front of you.
 +[Wish Him Luck] ->leave2
 
 === helpKid ===
-#speaker You
+#speaker Twiggy
 I'll help you look for it.
 
 #speaker Little Kid
@@ -123,7 +123,7 @@ You decide to not involve yourself.
 ->END
 
 === leave2 ===
-#speaker You
+#speaker Twiggy
 Well, I wish you luck!
 
 #speaker Little Kid
