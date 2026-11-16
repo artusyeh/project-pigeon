@@ -7,6 +7,8 @@ using UnityEngine.SceneManagement;
 using Ink.Runtime;
 using TMPro;
 using System.Security.AccessControl;
+using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -237,6 +239,8 @@ public class DialogueManager : MonoBehaviour
     // ---- Choices ---- //
     void ShowChoices()
     {
+        Debug.Log("Cursor state: " + Cursor.lockState + ", visible: " + Cursor.visible);
+
         choicePanel.gameObject.SetActive(true);
 
         // Deactivate the Textboxes
@@ -259,6 +263,8 @@ public class DialogueManager : MonoBehaviour
 
     void OnChoiceSelected(int choiceIndex)
     {
+        Debug.Log("Choice clicked: " + choiceIndex);
+
         choicePanel.gameObject.SetActive(false);
         dialogueRoot.gameObject.SetActive(true);
 
