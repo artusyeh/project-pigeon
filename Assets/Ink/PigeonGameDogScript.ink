@@ -17,7 +17,7 @@ How much longer... woof...
 #speaker Corgi
 I'm dying over here!
 
-#speaker You
+#speaker Twiggy
 How come your owner doesn't play with you?
 
 #speaker Corgi
@@ -26,7 +26,7 @@ She's naping in the grass.
 #speaker Corgi
 So, I have to take advantage of this freedom!
 
-#speaker You
+#speaker Twiggy
 I see. I will let you know if I find anything.
 ->END
 
@@ -70,13 +70,13 @@ Woof! Woof!
 #speaker Corgi
 Woof...
 
-#speaker You
+#speaker Twiggy
 Why do you keep barking?
 
 #speaker Corgi
 I'm bored.
 
-#speaker
+#speaker Corgi
 Woof, woof.
 
 +[I'll find you something fun.]->help
@@ -95,7 +95,7 @@ Woof.
 ->END
 
 === leave ===
-#speaker You
+#speaker Twiggy
 Maybe you should take a nap...
 
 #speaker Corgi

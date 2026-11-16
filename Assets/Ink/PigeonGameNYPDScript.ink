@@ -41,7 +41,7 @@ By the time Brian left, the wind had already blown the sticker away.
 #speaker Brian the NYPD Officer
 Find anything, pal?
 
-#speaker You
+#speaker Twiggy
 Not yet...
 
 #speaker Brian the NYPD Officer
@@ -60,10 +60,10 @@ How's your day, pal?
 +[Bad] ->badDay
 
 === goodDay ===
-#speaker You
+#speaker Twiggy
 It's been good!
 
-#speaker You
+#speaker Twiggy
 You?
 
 #speaker Brian the NYPD Officer
@@ -79,13 +79,13 @@ I lost my police badge...
 +[I hope you find it soon.] ->dontHelp
 
 === badDay ===
-#speaker You
+#speaker Twiggy
 It's hasn't been great.
 
 #speaker Brian the NYPD Officer
 Sorry to hear that.
 
-#speaker You
+#speaker Twiggy
 What about you?
 
 #speaker Brian the NYPD Officer
@@ -101,7 +101,7 @@ I lost my police badge...
 +[I hope you find it soon.] ->dontHelp
 
 === helpOut ===
-#speaker You
+#speaker Twiggy
 I can help you find it!
 
 #speaker Brian the NYPD Officer
@@ -118,7 +118,7 @@ I'll stay at my post in the meantime.
 ->END
 
 === dontHelp ===
-#speaker You
+#speaker Twiggy
 I hope you find it soon.
 
 #speaker Brian the NYPD Officer
