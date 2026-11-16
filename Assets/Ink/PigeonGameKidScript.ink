@@ -1,5 +1,6 @@
 VAR sunglassesQuest = false
 VAR sunglassesAquired = false
+VAR hatRecieved = false
 
 {
 - not sunglassesQuest && not sunglassesAquired:
@@ -49,6 +50,8 @@ Okay, bye now.
 #speaker Little Kid
 I'm gonna go be super duper cool with the other kids.
 
+~ hatRecieved = true
+
 -> END
 
 === ParkKidStart ===
@@ -91,6 +94,7 @@ He T-poses in front of you.
 +[\[2\] Wish Him Luck] ->leave2
 
 === helpKid ===
+~ sunglassesQuest = true
 #speaker Twiggy
 I'll help you look for it.
 

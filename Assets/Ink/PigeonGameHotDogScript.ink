@@ -100,6 +100,7 @@ How about that?
 +[\[2\] Reject] ->rejectTask
 
 === acceptTask ===
+~ hotdogQuest = true
 #speaker You
 That sounds good to me.
 

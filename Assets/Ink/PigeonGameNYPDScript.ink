@@ -107,6 +107,7 @@ I lost my police badge...
 +[\[2\] I hope you find it soon.] ->dontHelp
 
 === helpOut ===
+~ badgeQuest = true
 #speaker Twiggy
 I can help you find it!
 
