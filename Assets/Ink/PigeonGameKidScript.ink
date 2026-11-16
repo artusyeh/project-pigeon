@@ -103,7 +103,7 @@ I'll help you look for it.
 Thanks! You can have my propeller hat in return.
 
 #speaker Little Kid
-I too cool for childish things like that.
+I'm too cool for childish things like that.
 
 #speaker You
 Where do you think you lost your sunglasses?
