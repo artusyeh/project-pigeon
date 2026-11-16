@@ -7,6 +7,8 @@ using UnityEngine.SceneManagement;
 using Ink.Runtime;
 using TMPro;
 using System.Security.AccessControl;
+using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -32,6 +34,8 @@ public class DialogueManager : MonoBehaviour
 
     [Header("Ref")]
     private InventorySystem inventorySystem;
+
+    private static readonly Dictionary<string, object> savedVars = new Dictionary<string, object>();
 
     void Awake()
     {
@@ -145,6 +149,18 @@ public class DialogueManager : MonoBehaviour
         SetBool("hatRecieved", inventory.hatRecieved);
     }
 
+    public bool GetInkBool(string varName)
+    {
+        if (!savedVars.TryGetValue(varName, out object val)) return false;
+
+        //Look up the variable in the saved lists
+        //If it isn't there -> return false
+        //If it is there -> return true
+        if (val is bool b) return b;
+        if (val is int i) return i != 0;
+        return false;
+    }
+
     public void AdvanceStory()
     {
         // If Ink has more text
@@ -255,6 +271,8 @@ public class DialogueManager : MonoBehaviour
     // ---- Choices ---- //
     void ShowChoices()
     {
+        Debug.Log("Cursor state: " + Cursor.lockState + ", visible: " + Cursor.visible);
+
         choicePanel.gameObject.SetActive(true);
 
         // Deactivate the Textboxes
@@ -277,6 +295,8 @@ public class DialogueManager : MonoBehaviour
 
     void OnChoiceSelected(int choiceIndex)
     {
+        Debug.Log("Choice clicked: " + choiceIndex);
+
         choicePanel.gameObject.SetActive(false);
         dialogueRoot.gameObject.SetActive(true);
 

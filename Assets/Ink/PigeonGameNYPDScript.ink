@@ -12,6 +12,7 @@ VAR badgeAquired = false
 
 === BadgeFound ===
 #speaker Brian the NYPD Officer
+#expression police_happy
 Nice job, pigeon!
 
 #speaker Brian the NYPD Officer
@@ -39,6 +40,7 @@ By the time Brian left, the wind had already blown the sticker away.
 
 === PoliceWait ===
 #speaker Brian the NYPD Officer
+#expression police_sad
 Find anything, pal?
 
 #speaker Twiggy
@@ -54,10 +56,11 @@ Just let me know when you find it.
 
 === PoliceStart ===
 #speaker Brian the NYPD Officer
+#expression police_sad
 How's your day, pal?
 
-+[Good] ->goodDay
-+[Bad] ->badDay
++[\[1\] Good] ->goodDay
++[\[2\] Bad] ->badDay
 
 === goodDay ===
 #speaker Twiggy
@@ -67,22 +70,25 @@ It's been good!
 You?
 
 #speaker Brian the NYPD Officer
+#expression police_happy
 I'm glad to hear that!
 
 #speaker Brian the NYPD Officer
+#expression police_sad
 My day hasn't been going so well.
 
 #speaker Brian the NYPD Officer
 I lost my police badge...
 
-+[I can help you find it!] ->helpOut
-+[I hope you find it soon.] ->dontHelp
++[\[1\] I can help you find it!] ->helpOut
++[\[2\] I hope you find it soon.] ->dontHelp
 
 === badDay ===
 #speaker Twiggy
 It's hasn't been great.
 
 #speaker Brian the NYPD Officer
+#expression police_sad
 Sorry to hear that.
 
 #speaker Twiggy
@@ -97,17 +103,20 @@ My day hasn't been going so well either.
 #speaker Brian the NYPD Officer
 I lost my police badge...
 
-+[I can help you find it!] ->helpOut
-+[I hope you find it soon.] ->dontHelp
++[\[1\] I can help you find it!] ->helpOut
++[\[2\] I hope you find it soon.] ->dontHelp
 
 === helpOut ===
+~ badgeQuest = true
 #speaker Twiggy
 I can help you find it!
 
 #speaker Brian the NYPD Officer
+#expression police_happy
 That'd be great.
 
 #speaker Brian the NYPD Officer
+#expression police_sad
 I must have lost it while doing rounds.
 
 #speaker Brian the NYPD Officer
@@ -122,6 +131,7 @@ I'll stay at my post in the meantime.
 I hope you find it soon.
 
 #speaker Brian the NYPD Officer
+#expression police_sad
 Thanks, pal.
 
 ->END

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7933721393340693002}
   - component: {fileID: 1593552445556155437}
   m_Layer: 0
-  m_Name: Narrator
+  m_Name: Twiggy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -51,7 +51,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89e4f614aaf6f4268a0bc446f063a3bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterName: Narrator
+  inkFile: {fileID: 0}
+  interactionRange: 4.5
+  interactPromptUI: {fileID: 0}
+  characterName: Twiggy
   portrait: {fileID: 0}
   defaultPortrait: {fileID: 0}
   spriteRenderer: {fileID: 0}
