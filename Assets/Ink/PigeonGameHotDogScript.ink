@@ -44,7 +44,7 @@ Of course!
 ->END
 
 === whyGreen ===
-#speaker You
+#speaker Twiggy
 Why are you green?
 
 #speaker Dan the Hot Dog Man
@@ -53,7 +53,7 @@ I like eating peas.
 #speaker Dan the Hot Dog Man
 That's why, haha
 
-#speaker You
+#speaker Twiggy
 Well, thanks for the hot dog!
 
 #speaker Dan the Hot Dog Man
@@ -78,7 +78,7 @@ How will I open business now?
 +[\[2\] Leave]->leaveHotDog
 
 === helpHotDog ===
-#speaker You
+#speaker Twiggy
 I can help!
 
 #speaker Dan the Hot Dog Man
@@ -101,7 +101,7 @@ How about that?
 
 === acceptTask ===
 ~ hotdogQuest = true
-#speaker You
+#speaker Twiggy
 That sounds good to me.
 
 #speaker Dan the Hot Dog Man
@@ -109,7 +109,7 @@ Great! I'll be waiting right here.
 ->END
 
 === rejectTask ===
-#speaker You
+#speaker Twiggy
 Nevermind, I can't help right now.
 
 #speaker Dan the Hot Dog Man

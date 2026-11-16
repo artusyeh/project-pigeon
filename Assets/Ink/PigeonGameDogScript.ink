@@ -83,8 +83,8 @@ Woof, woof.
 +[\[2\] Maybe you should take a nap]->leave
 
 === help ===
-~ ballQuest = false
-#speaker You
+~ ballQuest = true
+#speaker Twiggy
 I'll find you something fun.
 
 #speaker Corgi
