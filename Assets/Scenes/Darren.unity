@@ -957,17 +957,48 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 504380452}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &553305064 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7770902388665169320, guid: 03de4ca391171aa418e414290f472462, type: 3}
+  m_PrefabInstance: {fileID: 2072848768}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &553305066 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 9001560542512783854, guid: 03de4ca391171aa418e414290f472462, type: 3}
   m_PrefabInstance: {fileID: 2072848768}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 553305064}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1d866abd676393346ba1a65bac7a82c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &553305071 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 771204788631020402, guid: 03de4ca391171aa418e414290f472462, type: 3}
+  m_PrefabInstance: {fileID: 2072848768}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &553305072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 553305064}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89e4f614aaf6f4268a0bc446f063a3bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inkFile: {fileID: 0}
+  interactionRange: 0
+  interactPromptUI: {fileID: 0}
+  characterName: Twiggy
+  portrait: {fileID: 0}
+  defaultPortrait: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+  expressionList: []
+  canvasGroup: {fileID: 0}
 --- !u!4 &594256860 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7801293940791160762, guid: 6ef65ac4a96d549af90afc5e82e2cbba, type: 3}
@@ -1074,7 +1105,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ced4a931ba40c5146bab71f96a471aa8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.1
+      value: 5.53
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ced4a931ba40c5146bab71f96a471aa8, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2231,6 +2262,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7741502583541745703, guid: b232aaa194517d04cb5970506557612e, type: 3}
   m_PrefabInstance: {fileID: 1530050886}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1559857570
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1559857571}
+  m_Layer: 0
+  m_Name: HatSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1559857571
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1559857570}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.066, y: 0.438, z: 0.104}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 553305071}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1620454895
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2608,7 +2670,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5698586086655111893, guid: bd6f736e3c46cd34ca097176192c6ed8, type: 3}
       propertyPath: m_Name
-      value: BADGE
+      value: badge
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2628,6 +2690,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -1252166567882841019, guid: 03de4ca391171aa418e414290f472462, type: 3}
+      propertyPath: pigeon
+      value: 
+      objectReference: {fileID: 553305064}
+    - target: {fileID: -1252166567882841019, guid: 03de4ca391171aa418e414290f472462, type: 3}
+      propertyPath: hatPrefab
+      value: 
+      objectReference: {fileID: 5569886320744248836, guid: bd23c9de393d04f4db57420a8bcdddd5, type: 3}
+    - target: {fileID: -1252166567882841019, guid: 03de4ca391171aa418e414290f472462, type: 3}
+      propertyPath: hatSpawnPoint
+      value: 
+      objectReference: {fileID: 1559857571}
     - target: {fileID: 771204788631020402, guid: 03de4ca391171aa418e414290f472462, type: 3}
       propertyPath: m_LocalPosition.x
       value: 71.85
@@ -2674,8 +2748,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 771204788631020402, guid: 03de4ca391171aa418e414290f472462, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1559857571}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7770902388665169320, guid: 03de4ca391171aa418e414290f472462, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 553305072}
   m_SourcePrefab: {fileID: 100100000, guid: 03de4ca391171aa418e414290f472462, type: 3}
 --- !u!114 &2121501195 stripped
 MonoBehaviour:

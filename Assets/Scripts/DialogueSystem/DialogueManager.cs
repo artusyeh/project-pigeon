@@ -235,6 +235,17 @@ public class DialogueManager : MonoBehaviour
     {
         if(story != null)
         {
+            if (story.variablesState.GlobalVariableExistsWithName("hatRecieved"))
+            {
+                object v = story.variablesState["hatRecieved"];
+                bool got = (v is bool b && b) || (v is int i && i != 0);
+
+                if (got)
+                {
+                    InventorySystem inv = FindFirstObjectByType<InventorySystem>();
+                    if (inv != null) inv.hatRecieved = true;
+                }
+            }
             foreach(string name in story.variablesState)
             {
                 if(name.EndsWith("Aquired") || name.EndsWith("Equipped") || name.EndsWith("Received"))
