@@ -66,6 +66,19 @@ public class DialogueManager : MonoBehaviour
     {
         if(!IsDialogueActive || story == null) return;
 
+        if (choicePanel != null && choicePanel.gameObject.activeSelf && story.currentChoices.Count > 0)
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                OnChoiceSelected(0);
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha2) && story.currentChoices.Count > 1)
+            {
+                OnChoiceSelected(1);
+            }
+
+            return;
+        }
         if(Input.GetKeyDown(KeyCode.Space))
         {
             //If text is still typing
@@ -85,6 +98,11 @@ public class DialogueManager : MonoBehaviour
 
             AdvanceStory();
         }
+        
+        // if(Input.GetKeyDown(KeyCode.1)
+        // {
+        //     
+        // }
     }
 
     public void StartDialogue(TextAsset newInkFile, InventorySystem inventory = null)
@@ -266,4 +284,5 @@ public class DialogueManager : MonoBehaviour
 
         AdvanceStory();
     }
+    
 }
