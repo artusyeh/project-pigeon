@@ -6,7 +6,6 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Ink.Runtime;
 using TMPro;
-using System.Security.AccessControl;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
 
@@ -117,6 +116,13 @@ public class DialogueManager : MonoBehaviour
         inkFile = newInkFile;
         story = new Story(inkFile.text);
 
+        //Restore variables when new dialgoue starts
+        foreach (var kv in savedVars)
+        {
+            if (story.variablesState.GlobalVariableExistsWithName(kv.Key))
+                story.variablesState[kv.Key] = kv.Value;
+        }
+
         //Sync the player's inventory booleans into Ink variables
         if (inventory != null) 
         {
@@ -126,8 +132,8 @@ public class DialogueManager : MonoBehaviour
         if (dialogueRoot != null)
             dialogueRoot.gameObject.SetActive(true);
 
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        // Cursor.lockState = CursorLockMode.None;
+        // Cursor.visible = true;
 
         ShowFirstLine();
     }
@@ -227,6 +233,20 @@ public class DialogueManager : MonoBehaviour
 
     public void EndDialogue()
     {
+        if(story != null)
+        {
+            foreach(string name in story.variablesState)
+            {
+                if(name.EndsWith("Aquired") || name.EndsWith("Equipped") || name.EndsWith("Received"))
+                    continue;
+                
+                //Save the name of the var into the savedVars
+                savedVars[name] = story.variablesState[name];
+                Debug.Log($"Saved {name} = {story.variablesState[name]}");
+            }
+        }
+
+
         IsDialogueActive = false;
         story = null;
 
@@ -237,8 +257,8 @@ public class DialogueManager : MonoBehaviour
             choicePanel.gameObject.SetActive(false);
         
         //Re-Lock the cursor
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        // Cursor.lockState = CursorLockMode.Locked;
+        // Cursor.visible = false;
     }
 
     // ---- Character ----
@@ -271,7 +291,7 @@ public class DialogueManager : MonoBehaviour
     // ---- Choices ---- //
     void ShowChoices()
     {
-        Debug.Log("Cursor state: " + Cursor.lockState + ", visible: " + Cursor.visible);
+        //Debug.Log("Cursor state: " + Cursor.lockState + ", visible: " + Cursor.visible);
 
         choicePanel.gameObject.SetActive(true);
 
