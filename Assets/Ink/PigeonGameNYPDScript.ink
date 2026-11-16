@@ -59,8 +59,8 @@ Just let me know when you find it.
 #expression police_sad
 How's your day, pal?
 
-+[Good] ->goodDay
-+[Bad] ->badDay
++[\[1\] Good] ->goodDay
++[\[2\] Bad] ->badDay
 
 === goodDay ===
 #speaker Twiggy
@@ -80,8 +80,8 @@ My day hasn't been going so well.
 #speaker Brian the NYPD Officer
 I lost my police badge...
 
-+[I can help you find it!] ->helpOut
-+[I hope you find it soon.] ->dontHelp
++[\[1\] I can help you find it!] ->helpOut
++[\[2\] I hope you find it soon.] ->dontHelp
 
 === badDay ===
 #speaker Twiggy
@@ -103,8 +103,8 @@ My day hasn't been going so well either.
 #speaker Brian the NYPD Officer
 I lost my police badge...
 
-+[I can help you find it!] ->helpOut
-+[I hope you find it soon.] ->dontHelp
++[\[1\] I can help you find it!] ->helpOut
++[\[2\] I hope you find it soon.] ->dontHelp
 
 === helpOut ===
 #speaker Twiggy

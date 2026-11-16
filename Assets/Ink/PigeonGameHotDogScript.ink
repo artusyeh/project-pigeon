@@ -35,8 +35,8 @@ Here's the first grilled hot dog of the day, as promised.
 #speaker Dan the Hot Dog Man
 Enjoy!
 
-+[Thank you!] ->thankYou
-+[Why are you green?] ->whyGreen
++[\[1\] Thank you!] ->thankYou
++[\2\] Why are you green?] ->whyGreen
 
 === thankYou ===
 #speaker Dan the Hot Dog Man
@@ -74,8 +74,8 @@ I can't believe I lost them.
 #speaker Dan the Hot Dog Man
 How will I open business now?
 
-+[Offer to Help]->helpHotDog
-+[Leave]->leaveHotDog
++[\[1\] Offer to Help]->helpHotDog
++[\[2\] Leave]->leaveHotDog
 
 === helpHotDog ===
 #speaker You
@@ -96,8 +96,8 @@ If you find them, I'll grill you the first hot dog of the day.
 #speaker Dan the Hot Dog Man
 How about that?
 
-+[Accept] ->acceptTask
-+[Reject] ->rejectTask
++[\[1\] Accept] ->acceptTask
++[\[2\] Reject] ->rejectTask
 
 === acceptTask ===
 #speaker You

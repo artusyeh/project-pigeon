@@ -1,5 +1,5 @@
 VAR sunglassesQuest = false
-VAR sunglassesAquired = true
+VAR sunglassesAquired = false
 
 {
 - not sunglassesQuest && not sunglassesAquired:
@@ -62,8 +62,8 @@ Sunglasses...
 #speaker Little Kid
 Oh no...
 
-+[Ask What's Wrong] ->whatsWrong
-+[Ignore] ->leave1
++[\[1\] Ask What's Wrong] ->whatsWrong
++[\[2\] Ignore] ->leave1
 
 === whatsWrong ===
 #speaker Twiggy
@@ -87,8 +87,8 @@ Like this.
 #speaker Narrator
 He T-poses in front of you.
 
-+[Offer to Help] ->helpKid
-+[Wish Him Luck] ->leave2
++[\[1\] Offer to Help] ->helpKid
++[\[2\] Wish Him Luck] ->leave2
 
 === helpKid ===
 #speaker Twiggy
