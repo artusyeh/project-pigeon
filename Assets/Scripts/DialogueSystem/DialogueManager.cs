@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Ink.Runtime;
 using TMPro;
+using System.Security.AccessControl;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -15,7 +16,7 @@ public class DialogueManager : MonoBehaviour
     TextArchitect architect;
     
     [Header("Ink File")]
-    public TextAsset inkFile;
+    private TextAsset inkFile;
 
     [Header("Choice UI")]
     public Transform choicePanel;
@@ -26,9 +27,11 @@ public class DialogueManager : MonoBehaviour
     [Header("Ink Variables")]
     public string char_choice;
 
-    [Header("Audio")]
-    public AudioSource typeSource;
-    public AudioClip type;
+    [Header("Additional States")]
+    public bool IsDialogueActive = false;
+
+    [Header("Ref")]
+    private InventorySystem inventorySystem;
 
     void Awake()
     {
@@ -37,37 +40,32 @@ public class DialogueManager : MonoBehaviour
 
     void Start()
     {
-        Debug.Log("inkFile: " + inkFile);
-        Debug.Log("DialogueSystem.instance: " + DialogueSystem.instance);
+        // Debug.Log("inkFile: " + inkFile);
+        // Debug.Log("DialogueSystem.instance: " + DialogueSystem.instance);
 
-        if (DialogueSystem.instance != null)
-        {
-            Debug.Log("dialogueContainer: " + DialogueSystem.instance.dialogueContainer);
+        // if (DialogueSystem.instance != null)
+        // {
+        //     Debug.Log("dialogueContainer: " + DialogueSystem.instance.dialogueContainer);
 
-            if (DialogueSystem.instance.dialogueContainer != null)
-            {
-                Debug.Log("dialogueText: " + DialogueSystem.instance.dialogueContainer.dialogueText);
-            }
-        }
-
-        //Load Inky
-        story = new Story(inkFile.text);
+        //     if (DialogueSystem.instance.dialogueContainer != null)
+        //     {
+        //         Debug.Log("dialogueText: " + DialogueSystem.instance.dialogueContainer.dialogueText);
+        //     }
+        // }
 
         // Connect Architect to your DialogueSystem text
         architect = new TextArchitect(DialogueSystem.instance.dialogueContainer.dialogueText);
 
-        //SceneManagerScript sm = SceneManagerScript.Instance;
-        //Debug.Log("Current Scene: " + SceneManager.GetActiveScene().name);
-
-        //Automatically go to first line
-        ShowFirstLine();
-
-        //Declare Vars
-        char_choice = (string) story.variablesState["char_choice"];
+        if(dialogueRoot != null)
+            dialogueRoot.gameObject.SetActive(false);
+        if(choicePanel != null)
+            choicePanel.gameObject.SetActive(false);
     }
 
     void Update()
     {
+        if(!IsDialogueActive || story == null) return;
+
         if(Input.GetKeyDown(KeyCode.Space))
         {
             //If text is still typing
@@ -80,11 +78,6 @@ public class DialogueManager : MonoBehaviour
                 else
                 {
                     architect.ForceComplete();
-
-                    if (typeSource.isPlaying)
-                    {
-                        typeSource.Stop();
-                    }
                 }
 
                 return;
@@ -92,6 +85,46 @@ public class DialogueManager : MonoBehaviour
 
             AdvanceStory();
         }
+    }
+
+    public void StartDialogue(TextAsset newInkFile, InventorySystem inventory = null)
+    {
+        if (newInkFile == null || IsDialogueActive) return;
+
+        IsDialogueActive = true;
+        inkFile = newInkFile;
+        story = new Story(inkFile.text);
+
+        //Sync the player's inventory booleans into Ink variables
+        if (inventory != null) 
+        {
+            SyncInventoryToStory(inventory);
+        }
+        
+        if (dialogueRoot != null)
+            dialogueRoot.gameObject.SetActive(true);
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        ShowFirstLine();
+    }
+
+    private void SyncInventoryToStory(InventorySystem inventory)
+    {
+        void SetBool(string varName, bool val)
+        {
+            if(story.variablesState.GlobalVariableExistsWithName(varName))
+                story.variablesState[varName] = val;
+        }
+
+        // Match these strings to the exact VAR names at the top of your .ink files
+        SetBool("hotdogAquired", inventory.hotdogAquired);
+        SetBool("badgeAquired", inventory.badgeAquired);
+        SetBool("sunglassesAquired", inventory.sunglassesAquired);
+        SetBool("ballAquired", inventory.ballAquired);
+        SetBool("hatEquipped", inventory.hatEquipped);
+        SetBool("hatRecieved", inventory.hatRecieved);
     }
 
     public void AdvanceStory()
@@ -112,6 +145,9 @@ public class DialogueManager : MonoBehaviour
             ShowChoices();
             return;
         }
+
+        //End of Story
+        EndDialogue();
 
         Debug.Log("END OF STORY " + SceneManager.GetActiveScene().name);
         //SceneManagerScript sm = SceneManagerScript.Instance;
@@ -153,6 +189,22 @@ public class DialogueManager : MonoBehaviour
                 //Add more tags here
             }
         }
+    }
+
+    public void EndDialogue()
+    {
+        IsDialogueActive = false;
+        story = null;
+
+        if(dialogueRoot != null)
+            dialogueRoot.gameObject.SetActive(false);
+        
+        if(choicePanel != null)
+            choicePanel.gameObject.SetActive(false);
+        
+        //Re-Lock the cursor
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     // ---- Character ----

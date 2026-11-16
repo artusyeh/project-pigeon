@@ -33,6 +33,9 @@ public class BirdFlightController : MonoBehaviour
     public float hardLandingTotalSpeed = 18f;
     public float stunTime = 2.5f;
 
+    [Header("Flight Bounds")]
+    public float maxFlightHeight = 50f;
+
     public BirdState State { get; private set; }
     public float Speed => body.linearVelocity.magnitude;
     public float Yaw => yaw;
