@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7198360339324228487}
   - component: {fileID: 7000803094975266376}
   - component: {fileID: 9001560542512783854}
+  - component: {fileID: -1252166567882841019}
   m_Layer: 0
   m_Name: pigeon
   m_TagString: Untagged
@@ -170,6 +171,28 @@ MonoBehaviour:
   maxFlightHeight: 50
   flyingSFX: {fileID: 0}
   flyingVolume: 1
+--- !u!114 &-1252166567882841019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7770902388665169320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f79e46c8d4fe7894dbe3a638ed852d82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hotdogAquired: 0
+  badgeAquired: 0
+  sunglassesAquired: 0
+  ballAquired: 0
+  hatEquipped: 0
+  hatRecieved: 0
+  Inventory: []
+  hatSpawnPoint: {fileID: 0}
+  hatPrefab: {fileID: 0}
+  pigeon: {fileID: 0}
 --- !u!1001 &5066620251384256208
 PrefabInstance:
   m_ObjectHideFlags: 0
