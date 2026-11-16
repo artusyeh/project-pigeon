@@ -9,6 +9,13 @@ public class BirdPoop : MonoBehaviour
     [Min(0f)] public float downwardSpeed = 2f;
     [Min(0.05f)] public float cooldown = 0.35f;
 
+
+
+    [Header("Sound")]
+    public AudioClip poopSFX;
+    [Range(0f, 1f)] public float sfxVolume = 1f;
+
+    private AudioSource poopAudioSource;
     private BirdFlightController bird;
     private Rigidbody birdBody;
     private Collider[] birdColliders;
@@ -22,6 +29,12 @@ public class BirdPoop : MonoBehaviour
         birdBody = GetComponent<Rigidbody>();
         birdSphere = GetComponent<SphereCollider>();
         birdColliders = GetComponentsInChildren<Collider>();
+
+        // SOUNF CKING SOUND
+        poopAudioSource = gameObject.AddComponent<AudioSource>();
+        poopAudioSource.playOnAwake = false;
+        poopAudioSource.loop = false;
+        poopAudioSource.spatialBlend = 0f;
     }
 
     private void Update()
@@ -58,6 +71,7 @@ public class BirdPoop : MonoBehaviour
             bounds.min.y - diameter * 0.5f - 0.05f,
             bounds.center.z);
 
+
         GameObject poop = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         poop.name = "Poop";
         poop.transform.position = spawnPosition;
@@ -65,6 +79,7 @@ public class BirdPoop : MonoBehaviour
         poop.GetComponent<Renderer>().sharedMaterial = whiteMaterial;
 
         Collider poopCollider = poop.GetComponent<Collider>();
+
         foreach (Collider birdCollider in birdColliders)
         {
             if (birdCollider != null)
@@ -79,5 +94,9 @@ public class BirdPoop : MonoBehaviour
 
         PoopProjectile projectile = poop.AddComponent<PoopProjectile>();
         projectile.groundLayers = bird.groundLayers;
+
+        // play only when a poop sphere was actually created.
+        if (poopSFX != null)
+            poopAudioSource.PlayOneShot(poopSFX, sfxVolume);
     }
 }
