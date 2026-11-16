@@ -28,7 +28,7 @@ public class ObjectManager : MonoBehaviour
     void Update()
     {
         if (dialogueManager == null || inventory == null) return;
-        
+
         ShowWhenQuestActive(ball, "ballQuest", inventory.ballAquired);
         ShowWhenQuestActive(hotDog, "hotdogQuest", inventory.hotdogAquired);
         ShowWhenQuestActive(sunglasses, "sunglassesQuest", inventory.sunglassesAquired);
