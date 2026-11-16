@@ -18,7 +18,7 @@ public class DialogueSystem : MonoBehaviour
         }
 
         instance = this;
-        DontDestroyOnLoad(gameObject); // optional but recommended
+        DontDestroyOnLoad(gameObject);
     }
 
 

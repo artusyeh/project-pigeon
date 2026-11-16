@@ -22,8 +22,8 @@ public class CharacterManager : MonoBehaviour
         foreach (Character c in chars)
         {
             //instantly hide all characters
-            c.SetAlpha(0f);
-            c.gameObject.SetActive(false);
+            // c.SetAlpha(0f);
+            // c.gameObject.SetActive(false);
 
             //change everything to lower case -> Furina, furina, FURINA will all work
             string key = c.characterName.ToLower().Trim();
@@ -58,17 +58,17 @@ public class CharacterManager : MonoBehaviour
         foreach(Character c in characters.Values)
         {
             //Fade in the speaker
-            if(c == speaker)
-            {
-                c.gameObject.SetActive(c == speaker);
-                StartCoroutine(c.FadeTo(1f, 0f));
-            }
+            // if(c == speaker)
+            // {
+            //     c.gameObject.SetActive(c == speaker);
+            //     StartCoroutine(c.FadeTo(1f, 0f));
+            // }
 
             //Fade out other character
-            else
-            {
-                StartCoroutine(HideCharacter(c));
-            }
+            // else
+            // {
+            //     StartCoroutine(HideCharacter(c));
+            // }
         }
     }
 

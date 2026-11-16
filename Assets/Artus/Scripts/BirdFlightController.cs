@@ -1,11 +1,11 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody), typeof(SphereCollider))]
 public class BirdFlightController : MonoBehaviour
 {
-    // bird states
-    public enum BirdState { Grounded, TakingOff, Flying, Stunned }
+    public enum BirdState { Grounded, TakingOff, Flying, Stunned, noMove }
 
 
     [Header("WASD movement")]
@@ -13,10 +13,15 @@ public class BirdFlightController : MonoBehaviour
 
     private Vector2 moveInput;
     
+    [HideInInspector] public LayerMask groundLayers;
+
+    [Header("Floor Impact Sound")]
+    public AudioClip floorHitSFX;
+    [Range(0f, 1f)] public float floorHitVolume = 1f;
+
+    private AudioSource floorHitAudioSource;
+    
     [Header("Ground and takeoff")]
-    public LayerMask groundLayers;
-    public float chargeTime = 0.8f;
-    public float beatTolerance = 0.16f;
     public float launchForwardSpeed = 12f;
     public float launchUpSpeed = 7f;
 
@@ -33,6 +38,13 @@ public class BirdFlightController : MonoBehaviour
     public float hardLandingTotalSpeed = 18f;
     public float stunTime = 2.5f;
 
+    [Header("Flight Bounds")]
+    public float maxFlightHeight = 50f;
+
+    [Header("Flying Sound")]
+    public AudioClip flyingSFX;
+    [Range(0f, 1f)] public float flyingVolume = 1f;
+
     public BirdState State { get; private set; }
     public float Speed => body.linearVelocity.magnitude;
     public float Yaw => yaw;
@@ -40,19 +52,33 @@ public class BirdFlightController : MonoBehaviour
     public float ImpactShake { get; private set; }
 
     private Rigidbody body;
+    private AudioSource flyingAudioSource;
     private SphereCollider sphere;
     private Vector3 startPosition;
-    private float startYaw, yaw, pitch, charge, lastBeat;
+    private float startYaw, yaw, pitch;
     private float stunUntil, ignoreGroundUntil;
-    private int beats, pendingFlaps;
+    private int pendingFlaps;
     private bool launchPending;
-    // private string message = "Hold Space to prepare takeoff.";
-    private readonly float[] beatGaps = { 0.8f, 0.6f, 0.4f };
+    private readonly HashSet<Collider> groundContacts = new HashSet<Collider>();
+
+    private BirdState stateBeforeNoMove;
+    private Vector3 velocityBeforeNoMove;
+    private Vector3 angularVelocityBeforeNoMove;
+    private bool kinematicBeforeNoMove;
+    private RigidbodyInterpolation interpolationBeforeNoMove;
+    private CollisionDetectionMode collisionModeBeforeNoMove;
+    private float noMoveStartedAt;
 
     private void Awake()
     {
         body = GetComponent<Rigidbody>();
         sphere = GetComponent<SphereCollider>();
+
+
+        flyingAudioSource = gameObject.AddComponent<AudioSource>();
+        flyingAudioSource.playOnAwake = false;
+        flyingAudioSource.loop = true;
+        flyingAudioSource.spatialBlend = 0f;
 
         body.useGravity = false;
         body.isKinematic = false;
@@ -65,12 +91,21 @@ public class BirdFlightController : MonoBehaviour
         startPosition = body.position;
         startYaw = yaw = transform.eulerAngles.y;
         State = BirdState.Grounded;
+
+
+        floorHitAudioSource = gameObject.AddComponent<AudioSource>();
+        floorHitAudioSource.playOnAwake = false;
+        floorHitAudioSource.loop = false;
+        floorHitAudioSource.spatialBlend = 0f;
     }
 
 private void Update()
 {
-    ImpactShake = Mathf.MoveTowards(
-        ImpactShake, 0f, Time.deltaTime * 2f);
+    if (State != BirdState.noMove)
+    {
+        ImpactShake = Mathf.MoveTowards(
+            ImpactShake, 0f, Time.deltaTime * 2f);
+    }
 
     Keyboard keys = Keyboard.current;
     Mouse mouse = Mouse.current;
@@ -85,14 +120,16 @@ private void Update()
     else if (mouse.leftButton.wasPressedThisFrame)
         LockMouse(true);
 
+
+    if (State == BirdState.noMove) return;
+
     if (keys.rKey.wasPressedThisFrame)
         ResetBird();
 
     if (Cursor.lockState != CursorLockMode.Locked)
     {
-        if (State == BirdState.TakingOff)
-            CancelTakeoff();
-
+        launchPending = false;
+        pendingFlaps = 0;
         return;
     }
 
@@ -107,7 +144,7 @@ private void Update()
 
     moveInput = Vector2.ClampMagnitude(moveInput, 1f);
 
-    // mouse controls where the bird faces.
+    // mouse controls where the bird faces
     Vector2 mouseDelta = mouse.delta.ReadValue();
     yaw += mouseDelta.x * mouseSensitivity;
 
@@ -124,93 +161,59 @@ private void Update()
         return;
     }
 
-    // hold Space to prepare takeoff.
-    if (!keys.spaceKey.isPressed)
-    {
-        if (State == BirdState.TakingOff)
-            CancelTakeoff();
-
-        return;
-    }
-
-    State = BirdState.TakingOff;
-    charge += Time.deltaTime;
-
-    if (charge < chargeTime || launchPending) return;
-
-    if (beats > 0 &&
-        Time.time - lastBeat >
-        beatGaps[beats - 1] + beatTolerance)
-    {
-        beats = 0;
-    }
-
-    if (!keys.fKey.wasPressedThisFrame) return;
-
-    if (beats == 0)
-    {
-        beats = 1;
-        lastBeat = Time.time;
-        return;
-    }
-
-    float timingError = Mathf.Abs(
-        Time.time - lastBeat - beatGaps[beats - 1]);
-
-    if (timingError > beatTolerance)
-    {
-        beats = 0;
-        return;
-    }
-
-    beats++;
-    lastBeat = Time.time;
-
-    if (beats == 4)
+    // one F press takes off from the ground; Space is no longer used
+    if (State == BirdState.Grounded && keys.fKey.wasPressedThisFrame)
         launchPending = true;
 }
 
     private void FixedUpdate()
     {
+        // the kinematic Rigidbody stays frozen without gravity or flight forces
+        if (State == BirdState.noMove) return;
+
         if (body.position.y < -80f)
         {
             ResetBird();
             return;
         }
 
-        if (State == BirdState.Stunned && Time.time >= stunUntil)
-        {
-            State = GroundBelow()
-                ? BirdState.Grounded
-                : BirdState.Flying;
-        }
+        bool grounded = Time.time >= ignoreGroundUntil && GroundBelow();
 
-        if ((State == BirdState.Grounded ||
-             State == BirdState.TakingOff) && !GroundBelow())
+        // ground contact must never cancel an active crash stun
+        if (State == BirdState.Stunned)
         {
-            State = BirdState.Flying;
-            launchPending = false;
+            if (Time.time >= stunUntil)
+                State = grounded ? BirdState.Grounded : BirdState.Flying;
+        }
+        else
+        {
+            State = grounded ? BirdState.Grounded : BirdState.Flying;
+            if (grounded) pitch = 0f;
         }
 
         if (launchPending)
         {
             launchPending = false;
-            State = BirdState.Flying;
-            pitch = 15f;
-            ignoreGroundUntil = Time.time + 0.2f;
+            if (State == BirdState.Grounded)
+            {
+                State = BirdState.Flying;
+                pitch = 15f;
+                ignoreGroundUntil = Time.time + 0.2f;
+                groundContacts.Clear();
 
-            Vector3 forward =
-                Quaternion.Euler(0f, yaw, 0f) * Vector3.forward;
+                Vector3 forward =
+                    Quaternion.Euler(0f, yaw, 0f) * Vector3.forward;
 
-            Vector3 launch =
-                forward * launchForwardSpeed +
-                Vector3.up * launchUpSpeed;
+                Vector3 launch =
+                    forward * launchForwardSpeed +
+                    Vector3.up * launchUpSpeed;
 
-            body.AddForce(
-                launch - body.linearVelocity,
-                ForceMode.VelocityChange);
+                body.AddForce(
+                    launch - body.linearVelocity,
+                    ForceMode.VelocityChange);
 
-            return;
+                return;
+            }
         }
 
         if (State == BirdState.Flying)
@@ -258,7 +261,7 @@ private void Update()
         {
             body.AddForce(Physics.gravity, ForceMode.Acceleration);
 
-            if (GroundBelow())
+            if (grounded)
             {
                 Vector3 horizontal = Vector3.ProjectOnPlane(
                     body.linearVelocity, Vector3.up);
@@ -271,38 +274,94 @@ private void Update()
         }
     }
 
+    private void LateUpdate()
+    {
+        UpdateFlyingSound();
+    }
+
+    private void UpdateFlyingSound()
+    {
+        if (flyingAudioSource == null) return;
+
+        flyingAudioSource.volume = flyingVolume;
+
+        // allow the clip to be changed or cleared in the Inspector.
+        if (flyingAudioSource.clip != flyingSFX)
+        {
+            flyingAudioSource.Stop();
+            flyingAudioSource.clip = flyingSFX;
+        }
+
+        bool shouldPlay = isActiveAndEnabled &&
+            State == BirdState.Flying && flyingSFX != null;
+
+        if (shouldPlay)
+        {
+            if (!flyingAudioSource.isPlaying)
+                flyingAudioSource.Play();
+        }
+        else if (flyingAudioSource.isPlaying)
+        {
+            flyingAudioSource.Stop();
+        }
+    }
+
     private bool GroundBelow()
     {
-        float radius =
-            sphere.radius * Mathf.Abs(transform.lossyScale.y);
+        groundContacts.RemoveWhere(other => other == null || !other.enabled ||
+            !other.gameObject.activeInHierarchy || other.isTrigger);
+        if (groundContacts.Count > 0) return true;
 
-        return Physics.Raycast(
-            transform.TransformPoint(sphere.center),
+        if (body.linearVelocity.y > 0.5f) return false;
+
+        Bounds bounds = sphere.bounds;
+        RaycastHit[] hits = Physics.RaycastAll(
+            bounds.center,
             Vector3.down,
-            out RaycastHit hit,
-            radius + 0.12f,
-            groundLayers,
-            QueryTriggerInteraction.Ignore)
-            && hit.normal.y > 0.55f;
+            bounds.extents.y + 0.03f,
+            Physics.AllLayers,
+            QueryTriggerInteraction.Ignore);
+
+        float nearestDistance = float.PositiveInfinity;
+        bool foundGround = false;
+
+
+        foreach (RaycastHit hit in hits)
+        {
+            Collider other = hit.collider;
+            if (other.attachedRigidbody == body ||
+                other.transform.IsChildOf(transform) ||
+                Physics.GetIgnoreCollision(sphere, other))
+                continue;
+
+            if (hit.distance < nearestDistance)
+            {
+                nearestDistance = hit.distance;
+                foundGround = hit.normal.y > 0.55f;
+            }
+        }
+
+        return foundGround;
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        CheckLanding(collision);
+        CheckLanding(collision, true);
     }
 
     private void OnCollisionStay(Collision collision)
     {
-        CheckLanding(collision);
+        CheckLanding(collision, false);
     }
 
-    private void CheckLanding(Collision collision)
+    private void OnCollisionExit(Collision collision)
     {
-        if (State != BirdState.Flying ||
-            Time.time < ignoreGroundUntil) return;
+        groundContacts.Remove(collision.collider);
+    }
 
-        bool groundLayer =
-            (groundLayers.value & (1 << collision.gameObject.layer)) != 0;
+    private void CheckLanding(Collision collision, bool newImpact)
+    {
+        if (State == BirdState.noMove) return;
 
         bool landed = false;
         float impact = 0f;
@@ -311,7 +370,7 @@ private void Update()
         {
             Vector3 normal = collision.GetContact(i).normal;
 
-            if (groundLayer && normal.y > 0.55f)
+            if (normal.y > 0.55f)
                 landed = true;
 
             impact = Mathf.Max(
@@ -320,11 +379,23 @@ private void Update()
                     collision.relativeVelocity, normal)));
         }
 
-        bool crashed =
+        if (landed)
+            groundContacts.Add(collision.collider);
+        else
+            groundContacts.Remove(collision.collider);
+
+        // keep tracking the floor while stunned, without restarting the timer
+        if (State == BirdState.Stunned) return;
+
+        // let takeoff clear the floordwad
+        if (landed && Time.time < ignoreGroundUntil && body.linearVelocity.y > 0f)
+            return;
+
+        bool crashed = newImpact && (
             impact >= hardImpactSpeed ||
             (landed &&
              collision.relativeVelocity.magnitude >=
-             hardLandingTotalSpeed);
+             hardLandingTotalSpeed));
 
         if (!landed && !crashed) return;
 
@@ -336,17 +407,87 @@ private void Update()
             ImpactShake = 1f;
         }
 
-        pitch = charge = 0f;
-        beats = pendingFlaps = 0;
+        pitch = 0f;
+        pendingFlaps = 0;
         launchPending = false;
+
+        if (landed && newImpact && floorHitSFX != null)
+        {
+            floorHitAudioSource.PlayOneShot(floorHitSFX, floorHitVolume);
+        }
     }
 
-    private void CancelTakeoff()
+
+
+    /// freezes the bird, or resumes its previous state and momentum
+    /// call this method instead of assigning State directly
+    public void SetNoMove(bool frozen)
     {
-        State = BirdState.Grounded;
-        charge = 0f;
-        beats = 0;
-        launchPending = false;
+        if (body == null) return;
+
+        if (frozen)
+        {
+            // repeated freeze requests must not overwrite the saved state.
+            if (State == BirdState.noMove) return;
+
+            stateBeforeNoMove = State;
+            velocityBeforeNoMove = body.linearVelocity;
+            angularVelocityBeforeNoMove = body.angularVelocity;
+            kinematicBeforeNoMove = body.isKinematic;
+            interpolationBeforeNoMove = body.interpolation;
+            collisionModeBeforeNoMove = body.collisionDetectionMode;
+            noMoveStartedAt = Time.time;
+
+            State = BirdState.noMove;
+            moveInput = Vector2.zero;
+
+            if (!body.isKinematic)
+            {
+                body.linearVelocity = Vector3.zero;
+                body.angularVelocity = Vector3.zero;
+            }
+
+            body.interpolation = RigidbodyInterpolation.None;
+            body.collisionDetectionMode = CollisionDetectionMode.Discrete;
+            body.isKinematic = true;
+        }
+        else
+        {
+            if (State != BirdState.noMove) return;
+
+            float pausedDuration = Time.time - noMoveStartedAt;
+            stunUntil += pausedDuration;
+            ignoreGroundUntil += pausedDuration;
+
+            body.isKinematic = kinematicBeforeNoMove;
+            body.collisionDetectionMode = collisionModeBeforeNoMove;
+            body.interpolation = interpolationBeforeNoMove;
+
+            if (!body.isKinematic)
+            {
+                body.linearVelocity = velocityBeforeNoMove;
+                body.angularVelocity = angularVelocityBeforeNoMove;
+                body.WakeUp();
+            }
+
+            State = stateBeforeNoMove;
+            groundContacts.Clear();
+        }
+
+        // Uqdqwdqw
+        UpdateFlyingSound();
+    }
+
+    [ContextMenu("Freeze Bird (noMove)")]
+    public void EnterNoMove()
+    {
+        SetNoMove(true);
+    }
+
+    [ContextMenu("Resume Bird")]
+    public void ExitNoMove()
+    {
+        SetNoMove(false);
     }
 
     private void ResetBird()
@@ -359,8 +500,10 @@ private void Update()
         pitch = ImpactShake = 0f;
         pendingFlaps = 0;
         ignoreGroundUntil = 0f;
-
-        CancelTakeoff();
+        stunUntil = 0f;
+        launchPending = false;
+        groundContacts.Clear();
+        State = BirdState.Grounded;
     }
 
     private void LockMouse(bool locked)
@@ -373,7 +516,17 @@ private void Update()
 
     private void OnDisable()
     {
+        if (flyingAudioSource != null)
+            flyingAudioSource.Stop();
+
         LockMouse(false);
+        groundContacts.Clear();
+    }
+
+    private void OnDestroy()
+    {
+        if (flyingAudioSource != null)
+            Destroy(flyingAudioSource);
     }
 
     private void OnApplicationFocus(bool focused)
@@ -381,10 +534,10 @@ private void Update()
         if (!focused)
         {
             LockMouse(false);
-            pendingFlaps = 0;
+            if (State == BirdState.noMove) return;
 
-            if (State == BirdState.TakingOff)
-                CancelTakeoff();
+            pendingFlaps = 0;
+            launchPending = false;
         }
     }
 }
