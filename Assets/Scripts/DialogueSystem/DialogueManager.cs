@@ -35,6 +35,8 @@ public class DialogueManager : MonoBehaviour
     [Header("Ref")]
     private InventorySystem inventorySystem;
 
+    private static readonly Dictionary<string, object> savedVars = new Dictionary<string, object>();
+
     void Awake()
     {
         Instance = this;
@@ -145,6 +147,18 @@ public class DialogueManager : MonoBehaviour
         SetBool("ballAquired", inventory.ballAquired);
         SetBool("hatEquipped", inventory.hatEquipped);
         SetBool("hatRecieved", inventory.hatRecieved);
+    }
+
+    public bool GetInkBool(string varName)
+    {
+        if (!savedVars.TryGetValue(varName, out object val)) return false;
+
+        //Look up the variable in the saved lists
+        //If it isn't there -> return false
+        //If it is there -> return true
+        if (val is bool b) return b;
+        if (val is int i) return i != 0;
+        return false;
     }
 
     public void AdvanceStory()
